@@ -1,0 +1,97 @@
+<html lang="fr">
+<head>
+    <title>Connexion</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.9, shrink-to-fit=no">
+    <meta name ="author" content="BARMAN Rayan & MICHIELS Alexis">
+    <meta name="description" content="Projet des familles">
+    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css">
+    <script src="./assets/bootstrap/js/jquery.min.js"></script>
+    <script src="./assets/js/popper.min.js"></script>
+    <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="body-login">
+        <link rel="stylesheet" href="./assets/css/login.min.css">
+        <script>
+            $(document).ready(function(){
+                $(".veen .rgstr-btn button").click(function(){
+                    $('.veen .wrapper').addClass('move');
+                    $('.body-login').css('background','#ff59cd');
+                    $(".veen .login-btn button").removeClass('active');
+                    $(this).addClass('active');
+                });
+
+                $(".veen .login-btn button").click(function(){
+                    $('.veen .wrapper').removeClass('move');
+                    $('.body-login').css('background','#ff4931');
+                    $(".veen .rgstr-btn button").removeClass('active');
+                    $(this).addClass('active');
+                });
+
+                $("form#login").submit(function (e) {
+                    success(e);
+                });
+
+                $("form#register").submit(function (e) {
+                    success(e);
+                });
+                
+                function success(e) {
+                    e.preventDefault();
+                    $('.body-login').css('background','#50c355');
+                    $(".veen").css('margin-top', '300vh');
+                }
+            });
+        </script>
+        <div class="veen">
+            <div class="login-btn splits">
+                <p>Déjà inscrit ?</p>
+                <button class="active">Connexion</button>
+            </div>
+            <div class="rgstr-btn splits">
+                <p>Pas encore inscrit ?</p>
+                <button>Inscription</button>
+            </div>
+            <div class="wrapper">
+                <form id="login" tabindex="500">
+                    <h3>Connexion</h3>
+                    <div class="mail">
+                        <input type="mail" name="">
+                        <label>Mail ou pseudo</label>
+                    </div>
+                    <div class="passwd">
+                        <input type="password" name="">
+                        <label>Mot de passe</label>
+                    </div>
+                    <div class="submit">
+                        <button class="dark">Connexion</button>
+                    </div>
+                </form>
+                <form id="register" tabindex="502">
+                    <h3>Inscription</h3>
+                    <div class="name">
+                        <input type="text" name="">
+                        <label>Nom complet</label>
+                    </div>
+                    <div class="mail">
+                        <input type="mail" name="">
+                        <label>Mail</label>
+                    </div>
+                    <div class="uid">
+                        <input type="text" name="">
+                        <label>Pseudo</label>
+                    </div>
+                    <div class="passwd">
+                        <input type="password" name="">
+                        <label>Mot de passe</label>
+                    </div>
+                    <div class="submit">
+                        <button class="dark">Inscription</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
