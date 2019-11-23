@@ -1,4 +1,4 @@
-package api;
+package domain;
 
 import java.util.Collection;
 import java.util.HashMap;

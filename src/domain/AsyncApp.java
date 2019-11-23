@@ -1,4 +1,4 @@
-package api;
+package domain;
 
 import javax.servlet.http.HttpServlet;
 
