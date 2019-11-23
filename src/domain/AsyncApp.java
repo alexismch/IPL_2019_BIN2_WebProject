@@ -1,10 +1,10 @@
 package domain;
 
-import javax.servlet.http.HttpServlet;
-
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
+
+import javax.servlet.http.HttpServlet;
 
 public class AsyncApp {
 
@@ -24,6 +24,9 @@ public class AsyncApp {
 		HttpServlet usersServlet =new UsersServlet();
 		// the user servlet deals with the users GET and POST API functions 
 		context.addServlet(new ServletHolder(usersServlet), "/users");
+
+		HttpServlet apiLogin = new api.LoginServlet();
+		context.addServlet(new ServletHolder(apiLogin), "/api/test");
 		
 		HttpServlet loginServlet =new LoginServlet();
 		// the servlet deals with the login POST API function 

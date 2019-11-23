@@ -1,1 +1,8 @@
-[{"email":"raphael@voila.com","fullname":"Raphael Baroni"},{"email":"jkj@herenqn.com","fullname":"JK Roling"},{"email":"baroni@gmail.com","fullname":"Mister Baroni"},{"email":"raphi.baroni@gmail.com","fullname":null},{"email":"kati.takacs@gmail.com","fullname":"Superwoman"},{"email":"sarane@vaud.ch","fullname":"Sarane Estra"},{"email":"superadmin@ici.com","fullname":"Super User"},{"email":"marianne.vauth@iiideux.fr","fullname":"Marianne Vauth"},{"email":"last@here.voil","fullname":"Last Human"},{"email":"fresh@voici.com","fullname":"Fresh Man"},{"email":"SuperAdmin@power.com","fullname":"Super Big Admin"},{"email":"lastbut@not.leas","fullname":"Last but Not"},{"email":"istvan.grey@free.fr","fullname":"Istvan Grey"},{"email":"newSTudent@hello.ch","fullname":"new new"},{"email":"Final@holly.gral","fullname":"Final Show"},{"email":"raphi.baroni@gmail.com","fullname":"Yi Yo"},{"email":"Final@holly.gral","fullname":"Holly Belly"},{"email":"raphi.baroni@gmail.com","fullname":"TTES"},{"email":"hebbam.recrutements@gmail.com","fullname":"ok"},{"email":"alexis.michiels@student.vinci.be","fullname":"oui"}]
+{
+  "alexis.michiels@student.vinci.be": {
+    "fullname": "Michiels Alexis",
+    "email": "alexis.michiels@student.vinci.be",
+    "pseudo": "alexismch",
+    "passwd": "$2a$12$9XMLuDsD5ZvX0mEeFrGPMegSFvjZ5S5MWYZ0KaLXXnu773SzBsLYK"
+  }
+}
