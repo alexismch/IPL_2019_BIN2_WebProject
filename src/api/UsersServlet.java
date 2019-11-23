@@ -1,4 +1,5 @@
-import java.util.Collection;
+package api;
+
 import java.util.List;
 import java.util.Map;
 import java.io.BufferedReader;
@@ -9,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
