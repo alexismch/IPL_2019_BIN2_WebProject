@@ -18,72 +18,82 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
+            boolean isOk = true;
+            String return_json = "{\"success\":\"false\", \"message\":\"Utilisateur déjà existant.\"}";
+
             // Get the parameters sent by the POST form
             String email = req.getParameter("email");
             String pseudo = req.getParameter("pseudo");
             String fullname = req.getParameter("fullname");
             String passwd = req.getParameter("passwd");
-            System.out.println("USERS POST CALL TO REGISTER A USER:" + email + " " + pseudo + " " + fullname + " " + passwd + " ");
 
-            Genson genson = new Genson();
+            if (email == null || pseudo == null || fullname == null || passwd == null)  {
+                isOk = false;
+                return_json = "{\"success\":\"false\", \"message\":\"Paramètres invalides.\"}";
+            }
 
-            // 1: Regarder si l'adresse mail n'est pas déjà pris
-            //si pas présent --> créer un compte
-            //sinon envoié succes : false
+            if (isOk) {
+                System.out.println("USERS POST CALL TO REGISTER A USER:" + email + " " + pseudo + " " + fullname + " " + passwd + " ");
 
-            String json = new String(Files.readAllBytes(Paths.get("./data/users.json")));
+                Genson genson = new Genson();
 
-            Map users = genson.deserialize(json, Map.class);
-            final Map[] targetUser = new Map[1];
+                // 1: Regarder si l'adresse mail n'est pas déjà pris
+                //si pas présent --> créer un compte
+                //sinon envoié succes : false
 
-            users.forEach((key, value) -> {
-                if (key.equals(email))
-                    targetUser[0] = (Map) value;
-            });
+                String json = new String(Files.readAllBytes(Paths.get("./data/users.json")));
 
-            String return_json = "{\"success\":\"false\", \"message\":\"Utilisateur déjà Existant.\"}";
+                Map users = genson.deserialize(json, Map.class);
+                final Map[] targetUser = new Map[1];
 
-            // Le compte n'existe pas, du coup on le crée
-            if (targetUser[0] == null) {
-                Map<String, String> user_infos = new HashMap<String, String>();
-                user_infos.put("fullname", fullname);
-                user_infos.put("email" , email);
-                user_infos.put("pseudo", pseudo);
-                String password = BCrypt.hashpw(passwd, BCrypt.gensalt(12));
-                user_infos.put("passwd", password);
+                users.forEach((key, value) -> {
+                    if (key.equals(email))
+                        targetUser[0] = (Map) value;
+                });
 
-                // Ajout de l'utilisateur dans le json
-                users.put(email, user_infos);
-                json = genson.serialize(users);
-                System.out.println(json);
-                //ecrit dans le fichier json
-                Files.write(Paths.get("./data/users.json"), json.getBytes());
 
-                //Demander la connexion lors du succès de l'inscription
-                OkHttpClient client = new OkHttpClient();
+                // Le compte n'existe pas, du coup on le crée
+                if (targetUser[0] == null) {
+                    Map<String, String> user_infos = new HashMap<String, String>();
+                    user_infos.put("fullname", fullname);
+                    user_infos.put("email" , email);
+                    user_infos.put("pseudo", pseudo);
+                    String password = BCrypt.hashpw(passwd, BCrypt.gensalt(12));
+                    user_infos.put("passwd", password);
 
-                //Création du body avec les paramètres
-                RequestBody body = new FormBody.Builder()
-                        .add("email", email)
-                        .add("passwd", passwd)
-                        .build();
+                    // Ajout de l'utilisateur dans le json
+                    users.put(email, user_infos);
+                    json = genson.serialize(users);
+                    System.out.println(json);
+                    //ecrit dans le fichier json
+                    Files.write(Paths.get("./data/users.json"), json.getBytes());
 
-                //Création de la requête
-                Request request = new Request.Builder()
-                        .url("http://127.0.0.1/api/login")
-                        .post(body)
-                        .addHeader("Accept", "json/application")
-                        .addHeader("Cache-Control", "no-cache")
-                        .addHeader("Host", "127.0.0.1")
-                        .addHeader("Accept-Encoding", "gzip, deflate")
-                        .addHeader("Content-Length", "0")
-                        .addHeader("Connection", "keep-alive")
-                        .addHeader("cache-control", "no-cache")
-                        .build();
+                    //Demander la connexion lors du succès de l'inscription
+                    OkHttpClient client = new OkHttpClient();
 
-                Response response = client.newCall(request).execute();
+                    //Création du body avec les paramètres
+                    RequestBody body = new FormBody.Builder()
+                            .add("email", email)
+                            .add("passwd", passwd)
+                            .build();
 
-                return_json = response.body().string();
+                    //Création de la requête
+                    Request request = new Request.Builder()
+                            .url("http://127.0.0.1/api/login")
+                            .post(body)
+                            .addHeader("Accept", "json/application")
+                            .addHeader("Cache-Control", "no-cache")
+                            .addHeader("Host", "127.0.0.1")
+                            .addHeader("Accept-Encoding", "gzip, deflate")
+                            .addHeader("Content-Length", "0")
+                            .addHeader("Connection", "keep-alive")
+                            .addHeader("cache-control", "no-cache")
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+
+                    return_json = response.body().string();
+                }
             }
 
             //Reponse au client
