@@ -1,6 +1,8 @@
 package api;
 
 import com.owlike.genson.Genson;
+import okhttp3.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +49,8 @@ public class RegisterServlet extends HttpServlet {
                 user_infos.put("fullname", fullname);
                 user_infos.put("email" , email);
                 user_infos.put("pseudo", pseudo);
-                user_infos.put("passwd", passwd);
+                String password = BCrypt.hashpw(passwd, BCrypt.gensalt(12));
+                user_infos.put("passwd", password);
 
                 // Ajout de l'utilisateur dans le json
                 users.put(email, user_infos);
@@ -55,7 +58,32 @@ public class RegisterServlet extends HttpServlet {
                 System.out.println(json);
                 //ecrit dans le fichier json
                 Files.write(Paths.get("./data/users.json"), json.getBytes());
-                return_json = "{\"success\":\"false\", \"message\":\"Vous êtes bien inscrit, veuillez vous identifier.\"}";
+
+                //Demander la connexion lors du succès de l'inscription
+                OkHttpClient client = new OkHttpClient();
+
+                //Création du body avec les paramètres
+                RequestBody body = new FormBody.Builder()
+                        .add("email", email)
+                        .add("passwd", passwd)
+                        .build();
+
+                //Création de la requête
+                Request request = new Request.Builder()
+                        .url("http://127.0.0.1/api/login")
+                        .post(body)
+                        .addHeader("Accept", "json/application")
+                        .addHeader("Cache-Control", "no-cache")
+                        .addHeader("Host", "127.0.0.1")
+                        .addHeader("Accept-Encoding", "gzip, deflate")
+                        .addHeader("Content-Length", "0")
+                        .addHeader("Connection", "keep-alive")
+                        .addHeader("cache-control", "no-cache")
+                        .build();
+
+                Response response = client.newCall(request).execute();
+
+                return_json = response.body().string();
             }
 
             //Reponse au client

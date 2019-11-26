@@ -26,7 +26,10 @@ public class AsyncApp {
 		context.addServlet(new ServletHolder(usersServlet), "/users");
 
 		HttpServlet apiLogin = new api.LoginServlet();
-		context.addServlet(new ServletHolder(apiLogin), "/api/test");
+		context.addServlet(new ServletHolder(apiLogin), "/api/login");
+
+		HttpServlet apiRegister = new api.RegisterServlet();
+		context.addServlet(new ServletHolder(apiRegister), "/api/register");
 		
 		HttpServlet loginServlet =new LoginServlet();
 		// the servlet deals with the login POST API function 
