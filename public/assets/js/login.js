@@ -63,7 +63,7 @@ $(document).ready(function(){
             success : function(response, statut) {
                 console.log(response.success);
                 if (response.success === "true") {
-                    successLogin();
+                    successLogin(response.token);
                 } else failedLogin("form#login", response.message);
             },
             error : function() {
@@ -122,7 +122,7 @@ $(document).ready(function(){
             success : function(response, statut) {
                 console.log(response.success);
                 if (response.success === "true") {
-                    successLogin();
+                    successLogin(response.token);
                 } else failedLogin("form#register", response.message);
             },
             error : function() {
@@ -131,7 +131,8 @@ $(document).ready(function(){
         });
     }
 
-    function successLogin() {
+    function successLogin(token) {
+        localStorage.setItem("token", token);
         $('.alert').fadeOut();
         $('.body-login').css('background','#50c355');
         $(".veen").css('margin-top', '300vh');

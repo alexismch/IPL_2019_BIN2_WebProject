@@ -20,23 +20,18 @@ public class AsyncApp {
 		// this is to be able to make changes to .js files without having to restart everything
 		context.setInitParameter("cacheControl","no-store,no-cache,must-revalidate");
 		
-			
-		HttpServlet usersServlet =new UsersServlet();
-		// the user servlet deals with the users GET and POST API functions 
-		context.addServlet(new ServletHolder(usersServlet), "/users");
 
 		HttpServlet apiLogin = new api.LoginServlet();
 		context.addServlet(new ServletHolder(apiLogin), "/api/login");
 
 		HttpServlet apiRegister = new api.RegisterServlet();
 		context.addServlet(new ServletHolder(apiRegister), "/api/register");
-		
-		HttpServlet loginServlet =new LoginServlet();
-		// the servlet deals with the login POST API function 
+
+		HttpServlet loginServlet = new LoginServlet();
 		context.addServlet(new ServletHolder(loginServlet), "/login");
-		
+
 		// create a servlet to control responses to requests at any endpoint URL
-		HttpServlet rootServlet =new RootServlet();
+		HttpServlet rootServlet = new RootServlet();
 		context.addServlet(new ServletHolder(rootServlet), "/");
 		
 		// handling static content : create the shared folder of your web app

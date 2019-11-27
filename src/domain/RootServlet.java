@@ -1,44 +1,30 @@
 package domain;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-//import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-//import java.util.Random;
-import java.util.UUID;
-
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import com.auth0.jwt.JWTSigner;
-import com.auth0.jwt.JWTVerifier;
-import com.owlike.genson.GenericType;
-import com.owlike.genson.Genson;
+//import java.nio.charset.Charset;
+//import java.util.Random;
 
 @SuppressWarnings("serial")
 public class RootServlet extends HttpServlet {
-	private static final String JWTSECRET = "mybigsecrete123";
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
 			if (req.getRequestURI().contentEquals("/")) {
 				System.out.println("AUTH:"+req.getRequestURI());
-				String body = new String(Files.readAllBytes(Paths.get("./views/users.html")));
+				String head = new String(Files.readAllBytes(Paths.get("./views/global/head.html")));
+				String foot = new String(Files.readAllBytes(Paths.get("./views/global/foot.html")));
 				resp.setContentType("text/html");
 				resp.setCharacterEncoding("utf-8");
 				resp.setStatus(HttpServletResponse.SC_OK);
-				resp.getWriter().write(body);
+				resp.getWriter().write(head + foot);
 			} else
 			//// else return the required file (there is a based folder named "public")
 			{
@@ -68,9 +54,7 @@ public class RootServlet extends HttpServlet {
 					resp.getWriter().write("This resource does not exist");
 				}
 			}			
-		}
-
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			resp.setStatus(500);
 			resp.setContentType("text/html");
