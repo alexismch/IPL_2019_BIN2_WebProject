@@ -9,8 +9,33 @@
     <script src="./assets/bootstrap/js/jquery.min.js"></script>
     <script src="./assets/js/popper.min.js"></script>
     <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
+    <style>
+        .alert {
+            position: fixed;
+            width: 100%;
+            z-index: 9999;
+            text-align: center;
+        }
+    </style>
+    <script>
+        function failed(message) {
+            $('.alert span.message').html(message);
+            $('.alert').fadeIn();
+        }
+        $(document).ready(function () {
+            $(".alert button.close").click(function () {
+                $('.alert').fadeOut();
+            });
+        });
+    </script>
 </head>
 <body>
+    <div class="alert alert-danger" role="alert" style="display: none">
+        <strong>Erreur!</strong> <span class="message">You should check in on some of those fields below.</span>
+        <button type="button" class="close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     <div class="body-login">
         <link rel="stylesheet" href="./assets/css/login.min.css">
         <script>
@@ -29,6 +54,7 @@
                     $('.body-login').css('background','#ff59cd');
                     $(".veen .login-btn button").removeClass('active');
                     $(this).addClass('active');
+                    resetForm();
                 });
 
                 $(".veen .login-btn button").click(function(){
@@ -36,7 +62,13 @@
                     $('.body-login').css('background','#ff4931');
                     $(".veen .rgstr-btn button").removeClass('active');
                     $(this).addClass('active');
+                    resetForm();
                 });
+
+                function resetForm() {
+                    $("form input").css("border-color", "#999");
+                    $("form input").val("");
+                }
 
                 $("form#login").submit(function (e) {
                     e.preventDefault();
@@ -72,11 +104,11 @@
                         success : function(response, statut) {
                             console.log(response.success);
                             if (response.success === "true") {
-                                success();
-                            } else failed(response.message);
+                                successLogin();
+                            } else failedLogin("form#login", response.message);
                         },
                         error : function() {
-                            failed("Erreur de chargement.");
+                            failedLogin("form#login", "Erreur de chargement.");
                         }
                     });
                 }
@@ -131,22 +163,24 @@
                         success : function(response, statut) {
                             console.log(response.success);
                             if (response.success === "true") {
-                                success();
-                            } else failed(response.message);
+                                successLogin();
+                            } else failedLogin("form#register", response.message);
                         },
                         error : function() {
-                            failed("Erreur de chargement.");
+                            failedLogin("form#register", "Erreur de chargement.");
                         }
                     });
                 }
                 
-                function success() {
+                function successLogin() {
+                    $('.alert').fadeOut();
                     $('.body-login').css('background','#50c355');
                     $(".veen").css('margin-top', '300vh');
                 }
-
-                function failed(message) {
-                    alert(message);
+                
+                function failedLogin(form, message) {
+                    $(form + " input").css("border-color", "#ff4931");
+                    failed(message);
                 }
             });
         </script>
