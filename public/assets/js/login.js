@@ -1,4 +1,6 @@
 $(document).ready(function(){
+    $('title').html("Connexion");
+
     var mailExpr = '^[a-zA-Z0-9._]+@[a-zA-Z0-9.]+\.[a-z]+$';
     var mailRegex = new RegExp(mailExpr);
     var passwdExpr = '^.{2,}$';
@@ -61,8 +63,7 @@ $(document).ready(function(){
             dataType : 'json',
             timeout: 5000,
             success : function(response, statut) {
-                console.log(response.success);
-                if (response.success === "true") {
+                if (response.success === "true" && statut === "success") {
                     successLogin(response.token);
                 } else failedLogin("form#login", response.message);
             },
@@ -120,8 +121,7 @@ $(document).ready(function(){
             dataType : 'json',
             timeout: 5000,
             success : function(response, statut) {
-                console.log(response.success);
-                if (response.success === "true") {
+                if (response.success === "true" && statut === "success") {
                     successLogin(response.token);
                 } else failedLogin("form#register", response.message);
             },
@@ -136,6 +136,11 @@ $(document).ready(function(){
         $('.alert').fadeOut();
         $('.body-login').css('background','#50c355');
         $(".veen").css('margin-top', '300vh');
+        setTimeout(
+            function()
+            {
+                activeLoading();
+            }, 500);
     }
 
     function failedLogin(form, message) {

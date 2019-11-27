@@ -20,7 +20,7 @@ public class LoginServlet extends HttpServlet {
             String answer = "";
             if ("json".equals(type)) {
                 String body = new String(Files.readAllBytes(Paths.get("./views/login.html")));
-                answer = "{\"title\":\"Connexion\", \"body\":\"" + body + "\"}";
+                answer = body;
                 resp.setContentType("application/json");
             } else {
                 String head = new String(Files.readAllBytes(Paths.get("./views/global/head.html")));
