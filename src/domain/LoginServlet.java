@@ -19,8 +19,9 @@ public class LoginServlet extends HttpServlet {
             String type = req.getParameter("type");
             String answer = "";
             if ("json".equals(type)) {
-
-                resp.setContentType("json");
+                String body = new String(Files.readAllBytes(Paths.get("./views/login.html")));
+                answer = "{\"title\":\"Connexion\", \"body\":\"" + body + "\"}";
+                resp.setContentType("application/json");
             } else {
                 String head = new String(Files.readAllBytes(Paths.get("./views/global/head.html")));
                 String body = new String(Files.readAllBytes(Paths.get("./views/login.html")));
