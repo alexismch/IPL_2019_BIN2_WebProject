@@ -142,8 +142,10 @@ $(document).ready(function(){
         $(".veen").css('margin-top', '300vh');
         setTimeout(function() {
                 activeLoading();
-                loadDashboard();
-            },500);
+                setTimeout(function() {
+                    loadDashboard();
+                },500);
+        },500);
     }
 
     function failedLogin(form, message) {
