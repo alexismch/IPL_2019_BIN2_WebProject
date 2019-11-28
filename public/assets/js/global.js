@@ -33,7 +33,7 @@ function failed(message) {
 
 function appendPage(url, response) {
     $("body").append(response);
-    window.history.pushState({"html":response,"pageTitle":"Connexion"},"", url);
+    window.history.pushState({"pageUrl":window.location.hostname + "/login", "pageTitle":"Connexion"},"", url);
     exitLoading();
 }
 
