@@ -1,6 +1,17 @@
 <nav class="navbar navbar-light bg-light">
+    <script>
+        $(document).ready(function () {
+            $("#disconnect").click(function (e) {
+                e.preventDefault();
+                disconnect();
+            });
+        });
+    </script>
     <a class="navbar-brand" href="#">
         <img src="./assets/img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
         Puissance 4
+    </a>
+    <a href="#" id="disconnect">
+      Déconnexion
     </a>
 </nav>

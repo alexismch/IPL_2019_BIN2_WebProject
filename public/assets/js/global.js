@@ -9,23 +9,7 @@ const initialRenderOfComponents = function (){
         return token;
     }
     else if (window.location.pathname !== "/login") {
-        $(".spa-body").remove();
-        $(".navbar").remove();
-        var data = "type=json";
-        var url = '/login';
-        $.ajax({
-            url : url,
-            type : 'GET',
-            data : data,
-            dataType : 'html',
-            timeout: 5000,
-            success : function(response, statut) {
-                appendPage(url, response);
-            },
-            error : function() {
-                initialRenderOfComponents();
-            }
-        });
+        loadLogin()
     } else {
         exitLoading();
     }
@@ -56,6 +40,38 @@ function loadDashboard() {
     $(".spa-body").remove();
     var data = "type=json";
     var url = '/dashboard';
+    $.ajax({
+        url : url,
+        type : 'GET',
+        data : data,
+        dataType : 'html',
+        timeout: 5000,
+        success : function(response, statut) {
+            appendPage(url, response);
+        },
+        error : function() {
+            initialRenderOfComponents();
+        }
+    });
+}
+
+function disconnect() {
+    activeLoading();
+    localStorage.removeItem("token");
+    localStorage.removeItem("user.fullname");
+    localStorage.removeItem("user.pseudo");
+    localStorage.removeItem("user.email");
+    token = undefined;
+    setTimeout(function() {
+        loadLogin();
+    },500);
+}
+
+function loadLogin() {
+    $(".spa-body").remove();
+    $(".navbar").remove();
+    var data = "type=json";
+    var url = '/login';
     $.ajax({
         url : url,
         type : 'GET',
