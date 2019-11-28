@@ -30,6 +30,9 @@ public class AsyncApp {
 		HttpServlet loginServlet = new LoginServlet();
 		context.addServlet(new ServletHolder(loginServlet), "/login");
 
+		HttpServlet dashBoardServlet = new DashBoardServlet();
+		context.addServlet(new ServletHolder(dashBoardServlet), "/dashboard");
+
 		// create a servlet to control responses to requests at any endpoint URL
 		HttpServlet rootServlet = new RootServlet();
 		context.addServlet(new ServletHolder(rootServlet), "/");

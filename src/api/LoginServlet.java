@@ -46,11 +46,24 @@ public class LoginServlet extends HttpServlet {
                 //Vérification si le mot de passe est correct
                 if (BCrypt.checkpw(passwd, password)) {
                     Map<String, Object> claims = new HashMap<>();
-                    claims.put("pseudo", targetUser[0]);
+                    claims.put("pseudo", targetUser[0].get("pseudo"));
+                    claims.put("email", targetUser[0].get("email"));
+                    claims.put("fullname", targetUser[0].get("fullname"));
                     claims.put("ip", req.getRemoteAddr());
                     String token = new JWTSigner(JWTSECRET).sign(claims);
-                    //Renvoie du succès avec le token
-                    return_json = "{\"success\":\"true\", \"token\":\""+ token + "\"}";
+                    //Renvoie du succès avec le token et les infos de l'user
+                    return_json =
+                            "{" +
+                                "\"success\":\"true\", " +
+                                "\"data\": {" +
+                                    "\"token\":\""+ token + "\", " +
+                                    "\"user\": {" +
+                                        "\"pseudo\":\"" + targetUser[0].get("pseudo") + "\", " +
+                                        "\"fullname\": \"" + targetUser[0].get("fullname") + "\", " +
+                                        "\"email\": \"" + targetUser[0].get("email") + "\" " +
+                                    "}" +
+                                "}" +
+                            "}";
                 }
             }
 

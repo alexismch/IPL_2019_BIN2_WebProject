@@ -3,9 +3,14 @@ let token=undefined;
 const initialRenderOfComponents = function (){
     token = localStorage.getItem("token");
     if (token) {
+        if (window.location.pathname === "/login" || window.location.pathname === "/") {
+            loadDashboard();
+        } else exitLoading();
         return token;
     }
     else if (window.location.pathname !== "/login") {
+        $(".spa-body").remove();
+        $(".navbar").remove();
         var data = "type=json";
         var url = '/login';
         $.ajax({
@@ -45,6 +50,25 @@ function exitLoading() {
 function activeLoading() {
     $("rect").attr("style", "");
     $(".body-loader").fadeIn();
+}
+
+function loadDashboard() {
+    $(".spa-body").remove();
+    var data = "type=json";
+    var url = '/dashboard';
+    $.ajax({
+        url : url,
+        type : 'GET',
+        data : data,
+        dataType : 'html',
+        timeout: 5000,
+        success : function(response, statut) {
+            appendPage(url, response);
+        },
+        error : function() {
+            initialRenderOfComponents();
+        }
+    });
 }
 
 $(document).ready(function () {

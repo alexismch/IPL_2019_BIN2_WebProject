@@ -64,7 +64,7 @@ $(document).ready(function(){
             timeout: 5000,
             success : function(response, statut) {
                 if (response.success === "true" && statut === "success") {
-                    successLogin(response.token);
+                    successLogin(response.data);
                 } else failedLogin("form#login", response.message);
             },
             error : function() {
@@ -122,7 +122,7 @@ $(document).ready(function(){
             timeout: 5000,
             success : function(response, statut) {
                 if (response.success === "true" && statut === "success") {
-                    successLogin(response.token);
+                    successLogin(response.data);
                 } else failedLogin("form#register", response.message);
             },
             error : function() {
@@ -131,16 +131,19 @@ $(document).ready(function(){
         });
     }
 
-    function successLogin(token) {
-        localStorage.setItem("token", token);
+    function successLogin(response) {
+        localStorage.setItem("token", response.token);
+        localStorage.setItem("user.pseudo", response.user.pseudo);
+        localStorage.setItem("user.fullname", response.user.fullname);
+        localStorage.setItem("user.email", response.user.email);
+
         $('.alert').fadeOut();
         $('.body-login').css('background','#50c355');
         $(".veen").css('margin-top', '300vh');
-        setTimeout(
-            function()
-            {
+        setTimeout(function() {
                 activeLoading();
-            }, 500);
+                loadDashboard();
+            },500);
     }
 
     function failedLogin(form, message) {

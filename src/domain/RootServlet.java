@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,7 +35,9 @@ public class RootServlet extends HttpServlet {
 					File file = new File(path.toString());
 					// Set the MIME type (mandatory if we want to use modules in our frontend application)
 					String mimeType = "";
-                    if(path.toString().contains(".js"))
+					if(path.toString().contains(".json"))
+						mimeType = "application/json";
+                    else if(path.toString().contains(".js"))
                            mimeType = "application/javascript";
                     else if(path.toString().contains(".html"))
                            mimeType = "text/html";
@@ -41,15 +45,33 @@ public class RootServlet extends HttpServlet {
                            mimeType = "text/css";
                     else if(path.toString().contains(".ico"))
                            mimeType = "image/x-icon";
+					else if(path.toString().contains(".jpg") || path.toString().contains(".jpeg") || path.toString().contains(".JPG") || path.toString().contains(".JPEG"))
+						mimeType = "image/jpeg";
+					else if (path.toString().contains(".png") || path.toString().contains(".PNG"))
+					mimeType = "image/png";
 
-				
-					System.out.println("FILENAME:"+ file.getName() + "URI:"+req.getRequestURI()+" Content type:"+mimeType);
-					String fileContent = new String(Files.readAllBytes(path));
-					resp.setContentType(mimeType);
-					resp.setCharacterEncoding("utf-8");
-					
-					resp.setStatus(HttpServletResponse.SC_OK);
-					resp.getWriter().write(fileContent);
+					if (mimeType.contains("image")) {
+						InputStream is = getServletContext().getResourceAsStream(req.getRequestURI());
+						// it is the responsibility of the container to close output stream
+						OutputStream os = resp.getOutputStream();
+						if (is == null) {
+							resp.setContentType("text/plain");
+							os.write("Failed to send image".getBytes());
+						} else {
+							byte[] buffer = new byte[1024];
+							int bytesRead;
+							resp.setContentType("image/png");
+							while ((bytesRead = is.read(buffer)) != -1)
+								os.write(buffer, 0, bytesRead);
+						}
+					} else {
+						System.out.println("FILENAME:"+ file.getName() + "URI:"+req.getRequestURI()+" Content type:"+mimeType);
+						String fileContent = new String(Files.readAllBytes(path));
+						resp.setContentType(mimeType);
+						resp.setCharacterEncoding("utf-8");
+						resp.setStatus(HttpServletResponse.SC_OK);
+						resp.getWriter().write(fileContent);
+					}
 				} catch (IOException e) {
 					resp.getWriter().write("This resource does not exist");
 				}
