@@ -136,6 +136,8 @@ $(document).ready(function(){
         localStorage.setItem("user.pseudo", response.user.pseudo);
         localStorage.setItem("user.fullname", response.user.fullname);
         localStorage.setItem("user.email", response.user.email);
+        localStorage.setItem("user.descript", response.user.descript);
+        token = response.token;
 
         $('.alert').fadeOut();
         $('.body-login').css('background','#50c355');

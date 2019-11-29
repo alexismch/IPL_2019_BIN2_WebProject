@@ -22,7 +22,7 @@ function failed(message) {
 
 function appendPage(url, response) {
     $("body").append(response);
-    window.history.pushState({"pageUrl":window.location.hostname + "/login", "pageTitle":"Connexion"},"", url);
+    window.history.pushState({"pageUrl":window.location.hostname + url},"", url);
     exitLoading();
 }
 
@@ -37,8 +37,9 @@ function activeLoading() {
 }
 
 function loadDashboard() {
-    $(".spa-body").remove();
-    var data = "type=json";
+    if (token == null || window.location.pathname === "/dashboard")
+        return;
+    var data = "type=json&token=" + token;
     var url = '/dashboard';
     $.ajax({
         url : url,
@@ -47,10 +48,11 @@ function loadDashboard() {
         dataType : 'html',
         timeout: 5000,
         success : function(response, statut) {
+            $(".spa-body").remove();
             appendPage(url, response);
         },
-        error : function() {
-            initialRenderOfComponents();
+        error : function(response) {
+            console.log(response.responseText);
         }
     });
 }
@@ -68,6 +70,8 @@ function disconnect() {
 }
 
 function loadLogin() {
+    if (token != null || window.location.pathname === "/login")
+        return;
     $(".spa-body").remove();
     $(".navbar").remove();
     var data = "type=json";

@@ -58,6 +58,7 @@ public class RegisterServlet extends HttpServlet {
                     user_infos.put("fullname", fullname);
                     user_infos.put("email" , email);
                     user_infos.put("pseudo", pseudo);
+                    user_infos.put("descript", "Je suis nouveau.");
                     String password = BCrypt.hashpw(passwd, BCrypt.gensalt(12));
                     user_infos.put("passwd", password);
 

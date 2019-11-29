@@ -14,9 +14,20 @@ public class DashBoardServlet extends HttpServlet {
         try {
             System.out.println("AUTH:"+req.getRequestURI());
             String type = req.getParameter("type");
+            String token = req.getParameter("token");
+            if ("null".equals(token)) {
+                resp.setStatus(403);
+                resp.setCharacterEncoding("utf-8");
+                resp.setContentType("text/plain");
+                String return_msg = "Accès non authorisé.";
+                resp.getWriter().write(return_msg);
+                return;
+            }
             String answer = "";
             if ("json".equals(type)) {
-                String body = new String(Files.readAllBytes(Paths.get("./views/global/menu.html")));
+                String body = "";
+                if (req.getHeader("referer").contains("/login") || req.getHeader("referer").equals("http://" + req.getRemoteHost() + "/"))
+                    body = new String(Files.readAllBytes(Paths.get("./views/global/menu.html")));
                 body += new String(Files.readAllBytes(Paths.get("./views/dashboard.html")));
                 answer = body;
                 resp.setContentType("application/json");

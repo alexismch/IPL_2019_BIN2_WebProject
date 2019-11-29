@@ -25,7 +25,7 @@ public class LoginServlet extends HttpServlet {
             //Récupération des paramètres et vérification de leur existence
             String email = req.getParameter("email");
             String passwd = req.getParameter("passwd");
-            System.out.println("USERS POST CALL TO LOG A USER:" + email + " " + passwd);
+            System.out.println("USERS POST CALL TO LOG A USER:" + email);
 
             Genson genson = new Genson();
 
@@ -49,6 +49,7 @@ public class LoginServlet extends HttpServlet {
                     claims.put("pseudo", targetUser[0].get("pseudo"));
                     claims.put("email", targetUser[0].get("email"));
                     claims.put("fullname", targetUser[0].get("fullname"));
+                    claims.put("descript", targetUser[0].get("descript"));
                     claims.put("ip", req.getRemoteAddr());
                     String token = new JWTSigner(JWTSECRET).sign(claims);
                     //Renvoie du succès avec le token et les infos de l'user
@@ -60,7 +61,8 @@ public class LoginServlet extends HttpServlet {
                                     "\"user\": {" +
                                         "\"pseudo\":\"" + targetUser[0].get("pseudo") + "\", " +
                                         "\"fullname\": \"" + targetUser[0].get("fullname") + "\", " +
-                                        "\"email\": \"" + targetUser[0].get("email") + "\" " +
+                                        "\"email\": \"" + targetUser[0].get("email") + "\", " +
+                                        "\"descript\": \"" + targetUser[0].get("descript") + "\" " +
                                     "}" +
                                 "}" +
                             "}";

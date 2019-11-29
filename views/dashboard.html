@@ -1,7 +1,99 @@
-<div class="spa-body body-dashboard">
+<div class="spa-body body-dashboard container-fluid">
     <script>
         $(document).ready(function () {
             $('title').html("Dashboard");
+            $('#profile-pseudo').html(localStorage.getItem("user.pseudo"));
+            $('#profile-descript').html(localStorage.getItem("user.descript"));
+            $('#profile-fullname').html(localStorage.getItem("user.fullname"));
+            $('#profile-email').html(localStorage.getItem("user.email"));
         });
     </script>
+    <style>
+        .body-dashboard {
+            margin-top: 50px;
+        }
+
+        .card {
+            padding: 0;
+        }
+
+        .section {
+            margin-bottom: 15px;
+        }
+        .section:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+    <div class="row">
+        <div class="user-infos col-lg-3 col-md-4 col-sm-6 col-xs-12">
+            <div class="card">
+                <img src="./assets/img/users/random.jpg" id="profile-img" class="card-img-top" alt="Photo de l'utilisateur">
+                <div class="card-body">
+                    <h5 class="card-title" id="profile-pseudo">alexismch</h5>
+                    <p class="card-text" id="profile-descript">Je suis nouveau.</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" id="profile-fullname">Michiels Alexis</li>
+                    <li class="list-group-item" id="profile-email">private@alexismch.be</li>
+                </ul>
+                <div class="card-body">
+                    <a href="#" class="btn btn-primary" id="edit-profile">Modifier</a>
+                </div>
+            </div>
+        </div>
+        <div class="game-info col-lg-9 col-md-8 col-sm-6 col-xs-12">
+            <div class="section play-section">
+                <button type="button" class="btn btn-outline-primary" id="create-game">Créer une partie</button>
+                <button type="button" class="btn btn-outline-secondary" id="join-game">Rejoindre une partie</button>
+            </div>
+            <div class="section own-histo-section">
+                <h2>Mon historique</h2>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Gagnant</th>
+                        <th scope="col">Perdant</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>alexismch</td>
+                        <td>RveBarman</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>RveBarman</td>
+                        <td>alexismch</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="section global-histo-section">
+                <h2>Historique global</h2>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Gagnant</th>
+                        <th scope="col">Perdant</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>alexismch</td>
+                        <td>RveBarman</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>RveBarman</td>
+                        <td>alexismch</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
