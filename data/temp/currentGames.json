@@ -1,3 +1,9 @@
-{
-
+{ "Partie1Test":{
+  "needPasswd":"false",
+  "passwd":"",
+  "name":"Partie1Test"},
+  "Partie2Test":{
+    "needPasswd":"false",
+    "passwd":"",
+    "name":"Partie2Test"}
 }

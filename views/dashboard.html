@@ -6,6 +6,102 @@
             $('#profile-descript').html(localStorage.getItem("user.descript"));
             $('#profile-fullname').html(localStorage.getItem("user.fullname"));
             $('#profile-email').html(localStorage.getItem("user.email"));
+
+            // ça fait quoi ça ?
+            $('#currentGames').on('hidden.bs.modal', function (e) {
+            });
+
+            $("#current-games").click(function (e) {
+                e.preventDefault();
+                console.log("coucou");
+                currentGames();
+            });
+
+            //Appel Ajax, récupere les parties courantes
+            function currentGames() {
+                const url = '/api/game';
+                $.ajax({
+                    contentType : 'json',
+                    type : 'GET',
+                    url : url,
+                    dataType : "json",
+                    success : function (response) {
+                        if(response.success) {
+                            create_dynamic_HTML_table(response.data);
+                        }
+                    },
+                    error : function(message) {
+                        console.log();
+                        failed(message);
+                    }
+                });
+            }
+            // Crée la table des parties dynamiquement
+            // data sont toutes les parties
+            function create_dynamic_HTML_table(data) {
+
+                let div_container = document.getElementById("dynamic_table");
+                // nettoie la div
+                div_container.innerHTML = "";
+                let myTable = document.createElement("table");
+                myTable.className = "table";
+                div_container.appendChild(myTable);
+
+                // crée le header
+                let headerLine = document.createElement("tr");
+                myTable.appendChild(headerLine);
+
+                // faire une boucle ici
+                let th1 = document.createElement("th");
+                th1.innerHTML = "Nom de la Partie";
+                headerLine.appendChild(th1);
+                let th2 = document.createElement("th");
+                th2.innerHTML = "mot de passe";
+                headerLine.appendChild(th2);
+                let th3 = document.createElement("th");
+                th3.innerHTML = "bouton";
+                headerLine.appendChild(th3);
+
+
+                // Crée le body
+                //crée les lignes
+                for (let i = 0; i < 4; i++) {
+
+                    let myLine = document.createElement("tr");
+                    myTable.appendChild(myLine);
+
+                    // crée les cellules dans les lignes
+                    for (let j = 0; j < 3; j++) {
+                        let myCell = document.createElement("td");
+                        myLine.appendChild(myCell);
+
+                        // check que si le mot de passe dans le json est faux alors ne pas mettre d'input
+                        if (j === 1) {
+                            console.log("input");
+                            let input = document.createElement("input");
+                            input.type = "text";
+                            input.required = true;
+                            myCell.appendChild(input);
+
+                        }
+
+                        //Boutton
+                        else if ( j === 2){
+                            // Mettre comme id dans le bouton le nom de la partie et dans l'input
+                            let button = document.createElement("button");
+                            button.innerText = "Rejoindre";
+                            button.className = "btn btn-primary";
+                            myCell.appendChild(button);
+
+                            // ajouter un listener du bouton et vérifier l'input dans le cas où il est présent
+                        }
+                        else {
+                            myCell.innerHTML = "test";
+                        }
+                    }
+                }
+            }
+
         });
     </script>
     <style>
@@ -140,7 +236,25 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-outline-secondary" id="join-game">Rejoindre une partie</button>
+                <button type="button" class="btn btn-outline-secondary" id="current-games" data-toggle="modal" data-target="#currentGames">Rejoindre une partie</button>
+                <div class="modal fade" id="currentGames" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Toutes les parties</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <h2>Les parties :</h2>
+                                <div id="dynamic_table">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="section own-histo-section">
                 <h2>Mon historique</h2>
