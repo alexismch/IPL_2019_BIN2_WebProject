@@ -1,5 +1,6 @@
 package domain;
 
+import api.CurrentGameServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -26,6 +27,9 @@ public class AsyncApp {
 
 		HttpServlet apiRegister = new api.RegisterServlet();
 		context.addServlet(new ServletHolder(apiRegister), "/api/register");
+
+		HttpServlet currentGameServlet = new CurrentGameServlet();
+		context.addServlet(new ServletHolder(currentGameServlet), "/api/game");
 
 		HttpServlet loginServlet = new LoginServlet();
 		context.addServlet(new ServletHolder(loginServlet), "/login");

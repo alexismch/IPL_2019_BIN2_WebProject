@@ -33,7 +33,7 @@ public class RegisterServlet extends HttpServlet {
             }
 
             if (isOk) {
-                System.out.println("USERS POST CALL TO REGISTER A USER:" + email + " " + pseudo + " " + fullname + " " + passwd + " ");
+                System.out.println("USERS POST CALL TO REGISTER A USER:" + email + " " + pseudo + " " + fullname);
 
                 Genson genson = new Genson();
 

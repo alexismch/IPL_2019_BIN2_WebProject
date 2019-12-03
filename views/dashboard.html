@@ -43,7 +43,103 @@
         </div>
         <div class="game-info col-lg-9 col-md-8 col-sm-6 col-xs-12">
             <div class="section play-section">
-                <button type="button" class="btn btn-outline-primary" id="create-game">Créer une partie</button>
+                <button type="button" class="btn btn-outline-primary" id="create-game" data-toggle="modal" data-target="#create-game-modal">Créer une partie</button>
+                <div class="modal fade" id="create-game-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Créer une partie</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="was-validated" id="create-game-form">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="game-name">Nom de la partie</label>
+                                        <input type="text" class="form-control is-invalid" id="game-name" required>
+                                        <div class="invalid-feedback">
+                                            Veuillez rentrer le nom de la partie.
+                                        </div>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input passwd-check" id="no-need-passwd"
+                                               name="radio-stacked" value="false" required>
+                                        <label class="custom-control-label" for="no-need-passwd">Pas besoin d'un mot de passe</label>
+                                    </div>
+                                    <div class="custom-control custom-radio mb-3">
+                                        <input type="radio" class="custom-control-input passwd-check" id="need-passwd"
+                                               name="radio-stacked" value="true" required>
+                                        <label class="custom-control-label" for="need-passwd">Besoin d'un mot de passe</label>
+                                        <div class="invalid-feedback">Veuillez choisir un des deux champs.</div>
+                                    </div>
+                                    <div class="col-md-6 mb-3" id="passwd-input" style="display: none">
+                                        <script>
+                                            $(document).ready(function () {
+                                                $("#need-passwd").prop('checked', false);
+
+                                                $('#create-game-modal').on('hidden.bs.modal', function (e) {
+                                                    $(".passwd-check").prop('checked', false);
+                                                    $("#passwd-input").slideUp();
+                                                    $("#passwd-input input").removeAttr("required");
+                                                    $("#game-passwd").val("");
+                                                    $("#game-name").val("");
+                                                });
+
+                                                $("#create-game-form").submit(function (e) {e.preventDefault();});
+
+                                                $(".passwd-check").change(function (e) {
+                                                    if ($(this).attr("id") === "need-passwd") {
+                                                        $("#passwd-input").slideDown();
+                                                        $("#passwd-input input").attr("required", "");
+                                                    } else {
+                                                        $("#passwd-input").slideUp();
+                                                        $("#passwd-input input").removeAttr("required");
+                                                        $("#game-passwd").val("");
+                                                    }
+                                                });
+
+                                                $("#create-game-submit").click(function (e) {
+                                                    e.preventDefault();
+                                                    if ($('input[name=radio-stacked]:checked', '#create-game-form').val() === undefined) return;
+                                                    var data = "name=" + $("#game-name").val() +
+                                                        "&needPasswd=" + $('input[name=radio-stacked]:checked', '#create-game-form').val() +
+                                                        "&passwd=" + $("#game-passwd").val();
+                                                    $.ajax({
+                                                        url : '/api/game',
+                                                        type : 'POST',
+                                                        data : data,
+                                                        dataType : 'json',
+                                                        timeout: 5000,
+                                                        success : function(response, statut) {
+                                                            if (response.success === "true") {
+                                                                $('.alert').fadeOut();
+                                                                activeLoading();
+                                                            } else
+                                                                failed(response.message);
+                                                        },
+                                                        error : function(message) {
+                                                            failed(message);
+                                                        }
+                                                    });
+                                                });
+                                            });
+                                        </script>
+                                        <label for="game-passwd">Mot de passe de la partie</label>
+                                        <input type="text" class="form-control is-invalid" id="game-passwd">
+                                        <div class="invalid-feedback">
+                                            Veuillez rentrer le mot de passe de la partie.
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                <button type="button" class="btn btn-primary" id="create-game-submit">Créer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <button type="button" class="btn btn-outline-secondary" id="join-game">Rejoindre une partie</button>
             </div>
             <div class="section own-histo-section">
