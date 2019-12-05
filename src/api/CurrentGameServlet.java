@@ -87,7 +87,7 @@ public class CurrentGameServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            System.out.println("Get games");
+            System.out.println("Get current games");
 
             Path path = Paths.get("./data/temp/currentGames.json");
             String json = "{\"success\":\"true\", \"data\":";

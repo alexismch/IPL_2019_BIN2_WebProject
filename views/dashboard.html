@@ -13,7 +13,6 @@
 
             $("#current-games").click(function (e) {
                 e.preventDefault();
-                console.log("coucou");
                 currentGames();
             });
 
@@ -27,7 +26,7 @@
                     dataType : "json",
                     success : function (response) {
                         if(response.success === "true") {
-                            create_dynamic_HTML_table(response.data);
+                            create_dynamic_Games_HTML_table(response.data);
                         }
                     },
                     error : function(message) {
@@ -36,10 +35,15 @@
                     }
                 });
             }
-            // Crée la table des parties dynamiquement
-            // data sont toutes les parties
-            function create_dynamic_HTML_table(data) {
 
+            // Crée la table des parties dynamiquement
+            // data est un Object, qui contient toutes les parties.
+            function create_dynamic_Games_HTML_table(data) {
+
+                // Le nombre de cellule besoin par ligne
+                const NB_CELL = 3;
+
+                // recupère la div
                 let div_container = document.getElementById("dynamic_table");
                 // nettoie la div
                 div_container.innerHTML = "";
@@ -47,11 +51,10 @@
                 myTable.className = "table";
                 div_container.appendChild(myTable);
 
-                // crée le header
+                /* crée le header */
                 let headerLine = document.createElement("tr");
                 myTable.appendChild(headerLine);
 
-                // faire une boucle ici
                 let th1 = document.createElement("th");
                 th1.innerHTML = "Nom";
                 headerLine.appendChild(th1);
@@ -63,26 +66,40 @@
                 headerLine.appendChild(th3);
 
 
-                // Crée le body
-                //crée les lignes
-                for (let i = 0; i < 4; i++) {
+                /* Crée le body */
+
+                // récupère les parties, objet dans une liste
+                const currentGames = Object.values(data);
+
+                for (const obj of currentGames) {
+
+                   // let attributesGame = Object.values(obj); // Liste avec les valeurs des attributs pour 1 partie
+                   // let keysAttributes = Object.keys(obj);
 
                     let myLine = document.createElement("tr");
                     myTable.appendChild(myLine);
 
                     // crée les cellules dans les lignes
-                    for (let j = 0; j < 3; j++) {
+                    for (let j = 0; j < NB_CELL; j++) {
+
                         let myCell = document.createElement("td");
                         myLine.appendChild(myCell);
 
                         // check que si le mot de passe dans le json est faux alors ne pas mettre d'input
                         if (j === 1) {
-                            console.log("input");
-                            let input = document.createElement("input");
-                            input.type = "text";
-                            input.required = true;
-                            myCell.appendChild(input);
 
+                            // pas mettre de input
+                            if (obj["needPasswd"] === "false") {
+                                myCell.innerHTML = "pas besoin de mot de passe";
+                            }
+                            else {
+                                let input = document.createElement("input");
+                                input.type = "password";
+                                input.className = "form-control";
+                                input.placeholder = "mot de passe";
+                                input.required = true;
+                                myCell.appendChild(input);
+                            }
                         }
 
                         //Boutton
@@ -96,7 +113,8 @@
                             // ajouter un listener du bouton et vérifier l'input dans le cas où il est présent
                         }
                         else {
-                            myCell.innerHTML = "test";
+                            let nomPartie = obj["name"];
+                            myCell.innerHTML = nomPartie;
                         }
                     }
                 }

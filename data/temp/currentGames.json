@@ -3,7 +3,7 @@
   "passwd":"",
   "name":"Partie1Test"},
   "Partie2Test":{
-    "needPasswd":"false",
+    "needPasswd":"true",
     "passwd":"",
     "name":"Partie2Test"}
 }
