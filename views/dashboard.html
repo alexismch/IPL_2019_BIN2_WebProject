@@ -26,7 +26,7 @@
                     url : url,
                     dataType : "json",
                     success : function (response) {
-                        if(response.success) {
+                        if(response.success === "true") {
                             create_dynamic_HTML_table(response.data);
                         }
                     },
@@ -53,13 +53,13 @@
 
                 // faire une boucle ici
                 let th1 = document.createElement("th");
-                th1.innerHTML = "Nom de la Partie";
+                th1.innerHTML = "Nom";
                 headerLine.appendChild(th1);
                 let th2 = document.createElement("th");
-                th2.innerHTML = "mot de passe";
+                th2.innerHTML = "Mot de passe";
                 headerLine.appendChild(th2);
                 let th3 = document.createElement("th");
-                th3.innerHTML = "bouton";
+                th3.innerHTML = "";
                 headerLine.appendChild(th3);
 
 
@@ -241,7 +241,7 @@
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Toutes les parties</h5>
+                                <h5 class="modal-title">Rejoindre une partie</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
                                     <span aria-hidden="true">&times;</span>
                                 </button>

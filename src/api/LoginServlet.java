@@ -1,6 +1,5 @@
 package api;
 
-import com.auth0.jwt.JWTSigner;
 import com.owlike.genson.Genson;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -15,9 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginServlet extends HttpServlet {
-    // this is our GET /users API providing all the users as a JSON object
-    private static final String JWTSECRET = "JSWebProjet2019";
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
@@ -51,7 +47,7 @@ public class LoginServlet extends HttpServlet {
                     claims.put("fullname", targetUser[0].get("fullname"));
                     claims.put("descript", targetUser[0].get("descript"));
                     claims.put("ip", req.getRemoteAddr());
-                    String token = new JWTSigner(JWTSECRET).sign(claims);
+                    String token = Utils.encodeToken(claims);
                     //Renvoie du succès avec le token et les infos de l'user
                     return_json =
                             "{" +

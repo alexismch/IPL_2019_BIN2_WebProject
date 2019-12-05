@@ -8,11 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.Map;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CurrentGameServlet extends HttpServlet {
     // this is our GET /users API providing all the users as a JSON object
@@ -21,6 +20,11 @@ public class CurrentGameServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
+            String token = req.getParameter("token");
+            if (!Utils.verifyToken(token, req)) {
+                Utils.replyWithWrongTokenError(resp, token);
+                return;
+            }
             String name = req.getParameter("name");
             String needPasswd = req.getParameter("needPasswd");
             String passwd = req.getParameter("passwd");
