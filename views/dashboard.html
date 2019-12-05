@@ -193,7 +193,7 @@
                     let attributes = Object.values(obj); // prend juste les valeurs
                     let myLine;
 
-                    // si le pseudo du client est dans l'historic
+                    // si le pseudo du client est dans l'historic ou si nous somme en global
                     if (attributes.includes(localStorage.getItem("user.pseudo")) || type === "Global") {
                         myLine = document.createElement("tr");
                         myTable.appendChild(myLine);
@@ -205,7 +205,7 @@
                     }
 
                     // ajout du # avant d'ajouter les noms
-                    let myCell = document.createElement("td");
+                    let myCell = document.createElement("th");
                     myCell.scope = "row";
                     myCell.innerHTML = count;
                     myLine.appendChild(myCell);
