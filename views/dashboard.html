@@ -11,10 +11,37 @@
             $('#currentGames').on('hidden.bs.modal', function (e) {
             });
 
+            // Action sur le bouton
             $("#current-games").click(function (e) {
                 e.preventDefault();
                 currentGames();
             });
+
+            //Appelle une fois au début et puis toutes les 5 secondes, pour mettre à jour
+            historique();
+            setInterval(historique, 5000);
+            
+            //Appel Ajax, récupère les historique
+            function historique () {
+                const url = '/api/historic';
+                $.ajax({
+                    contentType: 'json',
+                    type : 'GET',
+                    url : url,
+                    dataType : 'json',
+                    success : function (response) {
+                        if (response.success === 'true') {
+                            displayOwnAndGlobalHitso(response.data)
+                        }
+                    }
+                });
+            }
+
+            /** Affiche l'historique personnel et global*/
+            function displayOwnAndGlobalHitso(data) {
+                create_dynamic_historic_HTML_table("Own", data);
+                create_dynamic_historic_HTML_table("Global", data);
+            }
 
             //Appel Ajax, récupere les parties courantes
             function currentGames() {
@@ -44,7 +71,7 @@
                 const NB_CELL = 3;
 
                 // recupère la div
-                let div_container = document.getElementById("dynamic_table");
+                let div_container = document.getElementById("dynamic_games_table");
                 // nettoie la div
                 div_container.innerHTML = "";
                 let myTable = document.createElement("table");
@@ -78,6 +105,7 @@
 
                     let myLine = document.createElement("tr");
                     myTable.appendChild(myLine);
+                    myLine.id = obj["name"]; //chaque ligne à le nom da la partie comme id
 
                     // crée les cellules dans les lignes
                     for (let j = 0; j < NB_CELL; j++) {
@@ -85,13 +113,13 @@
                         let myCell = document.createElement("td");
                         myLine.appendChild(myCell);
 
-                        // check que si le mot de passe dans le json est faux alors ne pas mettre d'input
                         if (j === 1) {
 
                             // pas mettre de input
                             if (obj["needPasswd"] === "false") {
                                 myCell.innerHTML = "pas besoin de mot de passe";
                             }
+
                             else {
                                 let input = document.createElement("input");
                                 input.type = "password";
@@ -119,7 +147,78 @@
                     }
                 }
             }
+            
+            function create_dynamic_historic_HTML_table(type, data) {
 
+                let id_histo;
+
+                if(type === "Own") {
+                    id_histo = "own-historic";
+                }
+                else {
+                    id_histo = "global-historic";
+                }
+
+                let div_historic = document.getElementById(id_histo);
+
+                // clean la div à chaque fois et reécrit tout le json
+                div_historic.innerHTML = "";
+
+                let myTable = document.createElement("table");
+                myTable.className = "table";
+                div_historic.appendChild(myTable);
+
+                // header
+                let headerLine = document.createElement("tr");
+                myTable.appendChild(headerLine);
+
+                let th1 = document.createElement("th");
+                th1.innerHTML = "#";
+                headerLine.appendChild(th1);
+
+                let th2 = document.createElement("th");
+                th2.innerHTML = "Gagnant";
+                headerLine.appendChild(th2);
+
+                let th3 = document.createElement("th");
+                th3.innerHTML = "Perdant";
+                headerLine.appendChild(th3);
+
+                const historic = Object.values(data);
+                console.log(historic);
+                let count = 1;
+
+                for (const obj of historic) {
+
+                    let attributes = Object.values(obj); // prend juste les valeurs
+                    let myLine;
+
+                    // si le pseudo du client est dans l'historic
+                    if (attributes.includes(localStorage.getItem("user.pseudo")) || type === "Global") {
+                        myLine = document.createElement("tr");
+                        myTable.appendChild(myLine);
+                        myLine.id = count;
+                    }
+
+                    else {
+                        continue;
+                    }
+
+                    // ajout du # avant d'ajouter les noms
+                    let myCell = document.createElement("td");
+                    myCell.scope = "row";
+                    myCell.innerHTML = count;
+                    myLine.appendChild(myCell);
+
+                    for (const name of attributes) {
+                        let myCell = document.createElement("td");
+                        myCell.innerHTML = name;
+                        myLine.appendChild(myCell);
+
+                    }
+                    count += 1;
+                }
+            }
         });
     </script>
     <style>
@@ -266,7 +365,7 @@
                             </div>
                             <div class="modal-body">
                                 <h2>Les parties :</h2>
-                                <div id="dynamic_table">
+                                <div id="dynamic_games_table">
 
                                 </div>
                             </div>
@@ -276,51 +375,11 @@
             </div>
             <div class="section own-histo-section">
                 <h2>Mon historique</h2>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Gagnant</th>
-                        <th scope="col">Perdant</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>alexismch</td>
-                        <td>RveBarman</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>RveBarman</td>
-                        <td>alexismch</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div id="own-historic"></div>
             </div>
             <div class="section global-histo-section">
                 <h2>Historique global</h2>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Gagnant</th>
-                        <th scope="col">Perdant</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>alexismch</td>
-                        <td>RveBarman</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>RveBarman</td>
-                        <td>alexismch</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div id="global-historic"></div>
             </div>
         </div>
     </div>

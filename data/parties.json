@@ -1,10 +1,18 @@
 {
   "1": {
     "gagnant": "alexismch",
-    "perdant": "RveBarman"
+    "perdant": "RvyBarman"
   },
   "2": {
-    "gagnant": "RveBarman",
+    "gagnant": "RvyBarman",
     "perdant": "alexismch"
+  },
+  "3": {
+    "gagnant": "Collinet",
+    "perdant": "Barroni"
+  },
+  "4": {
+    "gagnant": "hehe",
+    "perdant": "uuu"
   }
 }

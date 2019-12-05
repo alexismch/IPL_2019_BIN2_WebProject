@@ -1,6 +1,7 @@
 package domain;
 
 import api.CurrentGameServlet;
+import api.HistoricServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -30,6 +31,9 @@ public class AsyncApp {
 
 		HttpServlet currentGameServlet = new CurrentGameServlet();
 		context.addServlet(new ServletHolder(currentGameServlet), "/api/game");
+
+		HttpServlet historicGameServlet = new HistoricServlet();
+		context.addServlet(new ServletHolder(historicGameServlet), "/api/historic");
 
 		HttpServlet loginServlet = new LoginServlet();
 		context.addServlet(new ServletHolder(loginServlet), "/login");
