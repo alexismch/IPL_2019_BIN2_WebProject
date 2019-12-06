@@ -19,14 +19,15 @@
 
             //Appelle une fois au début et puis toutes les 5 secondes, pour mettre à jour
             historique();
-            setInterval(historique, 5000);
-            
+
             //Appel Ajax, récupère les historique
             function historique () {
                 const url = '/api/historic';
+                var data = 'token=' + localStorage.getItem("token");
                 $.ajax({
                     contentType: 'json',
                     type : 'GET',
+                    data : data,
                     url : url,
                     dataType : 'json',
                     success : function (response) {
@@ -46,9 +47,11 @@
             //Appel Ajax, récupere les parties courantes
             function currentGames() {
                 const url = '/api/game';
+                var data = 'token=' + localStorage.getItem("token");
                 $.ajax({
                     contentType : 'json',
                     type : 'GET',
+                    data : data,
                     url : url,
                     dataType : "json",
                     success : function (response) {
@@ -57,7 +60,6 @@
                         }
                     },
                     error : function(message) {
-                        console.log();
                         failed(message);
                     }
                 });
@@ -66,83 +68,86 @@
             // Crée la table des parties dynamiquement
             // data est un Object, qui contient toutes les parties.
             function create_dynamic_Games_HTML_table(data) {
-
-                // Le nombre de cellule besoin par ligne
-                const NB_CELL = 3;
-
-                // recupère la div
-                let div_container = document.getElementById("dynamic_games_table");
-                // nettoie la div
-                div_container.innerHTML = "";
-                let myTable = document.createElement("table");
-                myTable.className = "table";
-                div_container.appendChild(myTable);
-
-                /* crée le header */
-                let headerLine = document.createElement("tr");
-                myTable.appendChild(headerLine);
-
-                let th1 = document.createElement("th");
-                th1.innerHTML = "Nom";
-                headerLine.appendChild(th1);
-                let th2 = document.createElement("th");
-                th2.innerHTML = "Mot de passe";
-                headerLine.appendChild(th2);
-                let th3 = document.createElement("th");
-                th3.innerHTML = "";
-                headerLine.appendChild(th3);
-
-
-                /* Crée le body */
-
                 // récupère les parties, objet dans une liste
                 const currentGames = Object.values(data);
+                let div_container = document.getElementById("dynamic_games_table");
+                $('#waiting-games-table').remove();
 
-                for (const obj of currentGames) {
+                if (currentGames.length === 0)
+                    $('#no-game-message').show();
+                else {
+                    $('#no-game-message').hide();
+                    // Le nombre de cellule besoin par ligne
+                    const NB_CELL = 3;
 
-                   // let attributesGame = Object.values(obj); // Liste avec les valeurs des attributs pour 1 partie
-                   // let keysAttributes = Object.keys(obj);
+                    // recupère la div
+                    // nettoie la div
+                    let myTable = document.createElement("table");
+                    myTable.className = "table";
+                    myTable.id = 'waiting-games-table';
+                    div_container.appendChild(myTable);
 
-                    let myLine = document.createElement("tr");
-                    myTable.appendChild(myLine);
-                    myLine.id = obj["name"]; //chaque ligne à le nom da la partie comme id
+                    /* Crée le body */
+                    /* crée le header */
+                    let headerLine = document.createElement("tr");
+                    myTable.appendChild(headerLine);
 
-                    // crée les cellules dans les lignes
-                    for (let j = 0; j < NB_CELL; j++) {
+                    let th1 = document.createElement("th");
+                    th1.innerHTML = "Nom";
+                    headerLine.appendChild(th1);
+                    let th2 = document.createElement("th");
+                    th2.innerHTML = "Mot de passe";
+                    headerLine.appendChild(th2);
+                    let th3 = document.createElement("th");
+                    th3.innerHTML = "";
+                    headerLine.appendChild(th3);
 
-                        let myCell = document.createElement("td");
-                        myLine.appendChild(myCell);
+                    for (const obj of currentGames) {
 
-                        if (j === 1) {
+                        // let attributesGame = Object.values(obj); // Liste avec les valeurs des attributs pour 1 partie
+                        // let keysAttributes = Object.keys(obj);
 
-                            // pas mettre de input
-                            if (obj["needPasswd"] === "false") {
-                                myCell.innerHTML = "pas besoin de mot de passe";
+                        let myLine = document.createElement("tr");
+                        myTable.appendChild(myLine);
+                        myLine.id = obj["name"]; //chaque ligne à le nom da la partie comme id
+
+                        // crée les cellules dans les lignes
+                        for (let j = 0; j < NB_CELL; j++) {
+
+                            let myCell = document.createElement("td");
+                            myLine.appendChild(myCell);
+
+                            if (j === 1) {
+
+                                // pas mettre de input
+                                if (obj["needPasswd"] === "false") {
+                                    myCell.innerHTML = "pas besoin de mot de passe";
+                                }
+
+                                else {
+                                    let input = document.createElement("input");
+                                    input.type = "password";
+                                    input.className = "form-control";
+                                    input.placeholder = "mot de passe";
+                                    input.required = true;
+                                    myCell.appendChild(input);
+                                }
                             }
 
+                            //Boutton
+                            else if ( j === 2){
+                                // Mettre comme id dans le bouton le nom de la partie et dans l'input
+                                let button = document.createElement("button");
+                                button.innerText = "Rejoindre";
+                                button.className = "btn btn-primary";
+                                myCell.appendChild(button);
+
+                                // ajouter un listener du bouton et vérifier l'input dans le cas où il est présent
+                            }
                             else {
-                                let input = document.createElement("input");
-                                input.type = "password";
-                                input.className = "form-control";
-                                input.placeholder = "mot de passe";
-                                input.required = true;
-                                myCell.appendChild(input);
+                                let nomPartie = obj["name"];
+                                myCell.innerHTML = nomPartie;
                             }
-                        }
-
-                        //Boutton
-                        else if ( j === 2){
-                            // Mettre comme id dans le bouton le nom de la partie et dans l'input
-                            let button = document.createElement("button");
-                            button.innerText = "Rejoindre";
-                            button.className = "btn btn-primary";
-                            myCell.appendChild(button);
-
-                            // ajouter un listener du bouton et vérifier l'input dans le cas où il est présent
-                        }
-                        else {
-                            let nomPartie = obj["name"];
-                            myCell.innerHTML = nomPartie;
                         }
                     }
                 }
@@ -185,7 +190,6 @@
                 headerLine.appendChild(th3);
 
                 const historic = Object.values(data);
-                console.log(historic);
                 let count = 1;
 
                 for (const obj of historic) {
@@ -256,7 +260,7 @@
         </div>
         <div class="game-info col-lg-9 col-md-8 col-sm-6 col-xs-12">
             <div class="section play-section">
-                <button type="button" class="btn btn-outline-primary" id="create-game" data-toggle="modal" data-target="#create-game-modal">Créer une partie</button>
+                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#create-game-modal">Créer une partie</button>
                 <div class="modal fade" id="create-game-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -317,7 +321,8 @@
                                                     if ($('input[name=radio-stacked]:checked', '#create-game-form').val() === undefined) return;
                                                     var data = "name=" + $("#game-name").val() +
                                                         "&needPasswd=" + $('input[name=radio-stacked]:checked', '#create-game-form').val() +
-                                                        "&passwd=" + $("#game-passwd").val();
+                                                        "&passwd=" + $("#game-passwd").val() +
+                                                        "&token=" + localStorage.getItem("token");
                                                     $.ajax({
                                                         url : '/api/game',
                                                         type : 'POST',
@@ -366,7 +371,17 @@
                             <div class="modal-body">
                                 <h2>Les parties :</h2>
                                 <div id="dynamic_games_table">
-
+                                    <p id="no-game-message">
+                                        Aucune partie en attente, créez en une : <br>
+                                        <button type="button" class="btn btn-outline-primary" id="no-game-button" data-toggle="modal" data-target="#create-game-modal">Créer une partie</button>
+                                    </p>
+                                    <script>
+                                        $(document).ready(function () {
+                                           $("#no-game-button").click(function () {
+                                               $('#currentGames').modal('hide');
+                                           });
+                                        });
+                                    </script>
                                 </div>
                             </div>
                         </div>

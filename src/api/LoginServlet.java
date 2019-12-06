@@ -1,5 +1,6 @@
 package api;
 
+import api.utils.Utils;
 import com.owlike.genson.Genson;
 import org.mindrot.jbcrypt.BCrypt;
 

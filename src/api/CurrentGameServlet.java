@@ -1,5 +1,6 @@
 package api;
 
+import api.utils.Utils;
 import com.owlike.genson.Genson;
 
 import javax.servlet.ServletException;
@@ -40,7 +41,7 @@ public class CurrentGameServlet extends HttpServlet {
                 System.out.println("USERS POST CALL TO REGISTER A GAME :" + name + " " + needPasswd + " " + passwd);
                 Genson genson = new Genson();
 
-                String json = new String(Files.readAllBytes(Paths.get("./data/temp/currentGames.json")));
+                String json = new String(Files.readAllBytes(Paths.get("./data/temp/waitingGames.json")));
                 Map games = genson.deserialize(json, Map.class);
                 final Map[] targetGame = new Map[1];
 
@@ -58,7 +59,7 @@ public class CurrentGameServlet extends HttpServlet {
                     games.put(name, game_infos);
                     json = genson.serialize(games);
                     System.out.println(json);
-                    Files.write(Paths.get("./data/temp/currentGames.json"), json.getBytes());
+                    Files.write(Paths.get("./data/temp/waitingGames.json"), json.getBytes());
 
                     return_json = genson.serialize(game_infos);
                     return_json = "{\"success\":\"true\", \"data\":" + return_json + "}";
@@ -88,8 +89,13 @@ public class CurrentGameServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             System.out.println("Get current games");
+            String token = req.getParameter("token");
+            if (!Utils.verifyToken(token, req)) {
+                Utils.replyWithWrongTokenError(resp, token);
+                return;
+            }
 
-            Path path = Paths.get("./data/temp/currentGames.json");
+            Path path = Paths.get("./data/temp/waitingGames.json");
             String json = "{\"success\":\"true\", \"data\":";
 
             if (Files.exists(path)) {

@@ -1,5 +1,7 @@
 package api;
 
+import api.utils.Utils;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,8 +17,13 @@ public class HistoricServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             System.out.println("Get historic games");
+            String token = req.getParameter("token");
+            if (!Utils.verifyToken(token, req)) {
+                Utils.replyWithWrongTokenError(resp, token);
+                return;
+            }
 
-            Path path = Paths.get("./data/parties.json");
+            Path path = Paths.get("./data/historicGames.json");
             String json = "{\"success\":\"true\", \"data\":";
 
             if (Files.exists(path)) {

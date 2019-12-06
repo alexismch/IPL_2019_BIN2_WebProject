@@ -2,6 +2,7 @@ package domain;
 
 import api.CurrentGameServlet;
 import api.HistoricServlet;
+import api.PlayingGameServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -35,11 +36,17 @@ public class AsyncApp {
 		HttpServlet historicGameServlet = new HistoricServlet();
 		context.addServlet(new ServletHolder(historicGameServlet), "/api/historic");
 
+		HttpServlet gameServlet = new PlayingGameServlet();
+		context.addServlet(new ServletHolder(gameServlet), "/api/playingGame");
+
 		HttpServlet loginServlet = new LoginServlet();
 		context.addServlet(new ServletHolder(loginServlet), "/login");
 
 		HttpServlet dashBoardServlet = new DashBoardServlet();
 		context.addServlet(new ServletHolder(dashBoardServlet), "/dashboard");
+
+		HttpServlet p4Servlet = new P4Servlet();
+		context.addServlet(new ServletHolder(p4Servlet), "/p4");
 
 		// create a servlet to control responses to requests at any endpoint URL
 		HttpServlet rootServlet = new RootServlet();

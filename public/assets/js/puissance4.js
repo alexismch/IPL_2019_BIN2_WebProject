@@ -1,10 +1,3 @@
-/***
-
-  Solution du TD http://defeo.lu/aws/tutorials/tutorial2
-  https://codepen.io/defeo/pen/emPevV
-  
- **/
-
 class Puissance4 {
   /*
     Intialise un plateau de jeu de dimensions `rows` × `cols` (par défaut 6×7),

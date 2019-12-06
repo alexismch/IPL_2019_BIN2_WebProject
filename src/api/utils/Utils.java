@@ -1,4 +1,4 @@
-package api;
+package api.utils;
 
 import com.auth0.jwt.JWTSigner;
 import com.auth0.jwt.JWTVerifier;
@@ -15,7 +15,7 @@ import java.util.Map;
 public class Utils {
     private static final String JWTSECRET = "JSWebProjet2019";
 
-    static String encodeToken(Map<String, Object> claims) {
+    public static String encodeToken(Map<String, Object> claims) {
         return new JWTSigner(JWTSECRET).sign(claims);
     }
 

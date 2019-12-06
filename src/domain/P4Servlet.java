@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class DashBoardServlet extends HttpServlet {
+public class P4Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
@@ -26,13 +26,13 @@ public class DashBoardServlet extends HttpServlet {
                 String body = "";
                 if (req.getHeader("referer").contains("/login") || req.getHeader("referer").equals("http://" + req.getRemoteHost() + "/"))
                     body = new String(Files.readAllBytes(Paths.get("./views/global/menu.html")));
-                body += new String(Files.readAllBytes(Paths.get("./views/dashboard.html")));
+                body += new String(Files.readAllBytes(Paths.get("./views/puissance4.html")));
                 answer = body;
                 resp.setContentType("application/json");
             } else {
                 String head = new String(Files.readAllBytes(Paths.get("./views/global/head.html")));
                 String body = new String(Files.readAllBytes(Paths.get("./views/global/menu.html")));
-                body += new String(Files.readAllBytes(Paths.get("./views/dashboard.html")));
+                body += new String(Files.readAllBytes(Paths.get("./views/puissance4.html")));
                 String foot = new String(Files.readAllBytes(Paths.get("./views/global/foot.html")));
                 answer = head + body + foot;
                 resp.setContentType("text/html");

@@ -2,14 +2,14 @@ let token=undefined;
 
 const initialRenderOfComponents = function (){
     token = localStorage.getItem("token");
-    if (token) {
+    if (token && token != null && token != "null") {
         if (window.location.pathname === "/login" || window.location.pathname === "/") {
             loadDashboard();
         } else exitLoading();
         return token;
     }
     else if (window.location.pathname !== "/login") {
-        loadLogin()
+        disconnect();
     } else {
         exitLoading();
     }
