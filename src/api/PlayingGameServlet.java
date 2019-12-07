@@ -13,9 +13,6 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 public class PlayingGameServlet extends HttpServlet {
-    // this is our GET /users API providing all the users as a JSON object
-    private static final String JWTSECRET = "JSWebProjet2019";
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
@@ -111,6 +108,9 @@ public class PlayingGameServlet extends HttpServlet {
                 return;
             }
 
+            return_json += "\"nomPartie\":\"" + targetGame[0].get("nomPartie") + "\", ";
+            return_json += "\"joueur1\":\"" + targetGame[0].get("joueur1") + "\", ";
+            return_json += "\"joueur2\":\"" + targetGame[0].get("joueur2") + "\", ";
             return_json += "\"dernierJoueur\":\"" + targetGame[0].get("dernierJoueur") + "\", ";
             return_json += "\"colonne\":\"" + targetGame[0].get("colonne") + "\"}";
             return_json += "}";

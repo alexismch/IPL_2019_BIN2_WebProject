@@ -2,16 +2,23 @@ package domain;
 
 import api.CurrentGameServlet;
 import api.HistoricServlet;
+import api.JoinGameServlet;
 import api.PlayingGameServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import javax.servlet.http.HttpServlet;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class AsyncApp {
 
 	public static void main(String[] args) throws Exception {
+		//Clear temp files
+		Files.write(Paths.get("./data/temp/playingGames.json"), "{}".getBytes());
+		Files.write(Paths.get("./data/temp/waitingGames.json"), "{}".getBytes());
+
 		// server to listen on specific port 8080
 		Server server = new Server(80);
 		// create the object to configure the web application
@@ -38,6 +45,9 @@ public class AsyncApp {
 
 		HttpServlet gameServlet = new PlayingGameServlet();
 		context.addServlet(new ServletHolder(gameServlet), "/api/playingGame");
+
+		HttpServlet joinGameServlet = new JoinGameServlet();
+		context.addServlet(new ServletHolder(joinGameServlet), "/api/joinGame");
 
 		HttpServlet loginServlet = new LoginServlet();
 		context.addServlet(new ServletHolder(loginServlet), "/login");

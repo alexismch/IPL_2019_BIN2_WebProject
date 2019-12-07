@@ -32,7 +32,7 @@ public class P4Servlet extends HttpServlet {
             } else {
                 String head = new String(Files.readAllBytes(Paths.get("./views/global/head.html")));
                 String body = new String(Files.readAllBytes(Paths.get("./views/global/menu.html")));
-                body += new String(Files.readAllBytes(Paths.get("./views/puissance4.html")));
+                body += new String(Files.readAllBytes(Paths.get("./views/global/exit.html")));
                 String foot = new String(Files.readAllBytes(Paths.get("./views/global/foot.html")));
                 answer = head + body + foot;
                 resp.setContentType("text/html");

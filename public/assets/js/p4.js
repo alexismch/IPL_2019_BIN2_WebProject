@@ -1,14 +1,15 @@
 var player = 0;
-const me = 0;
+const me = 1;
 var advers = "";
-var nomPartie = "Salut";
 var nbCouts = 0;
 
 $(document).ready(function () {
-    ready();
+    //ready();
+    wait("player");
 });
 
 function ready() {
+    if (me == 1) wait();
     $('#game table tr td').click(function (e) {
         if (player !== me) return;
         var col = this.getAttribute("data-column");
@@ -45,13 +46,12 @@ function push(colonne) {
         dataType : 'json',
         timeout: 5000,
         success : function(response, statut) {
-            console.log(response);
             wait();
         }
     });
 }
 
-function wait() {
+function wait(type) {
     var data = "nomPartie=" + nomPartie + "&token=" + localStorage.getItem("token");
     $.ajax({
         url : '/api/playingGame',
@@ -61,14 +61,25 @@ function wait() {
         timeout: 5000,
         success : function(response, statut) {
             if (response.success === "true" && statut === "success") {
-                if (localStorage.getItem("user.pseudo") !== response.data.dernierJoueur) {
-                    set(response.data.colonne);
-                    player = me;
+                if (type === "player") {
+                    if (response.data.joueur2 !== "") {
+                        advers = response.data.joueur2;
+                        ready();
+                    }
+                } else {
+                    if (response.data.dernierJoueur !== "" && localStorage.getItem("user.pseudo") !== response.data.dernierJoueur) {
+                        set(response.data.colonne);
+                        player = me;
+                    }
                 }
             }
         }
     });
     setTimeout(function() {
+        if (advers === "") {
+            wait("player");
+            return;
+        }
         if (me !== player && localStorage.getItem("token") != null && localStorage.getItem("token") !== "null") wait();
     },5000);
 }

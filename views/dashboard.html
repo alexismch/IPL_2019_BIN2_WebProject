@@ -9,6 +9,7 @@
 
             // ça fait quoi ça ?
             $('#currentGames').on('hidden.bs.modal', function (e) {
+                $('.game-passwd')
             });
 
             // Action sur le bouton
@@ -31,9 +32,8 @@
                     url : url,
                     dataType : 'json',
                     success : function (response) {
-                        if (response.success === 'true') {
+                        if (response.success === 'true')
                             displayOwnAndGlobalHitso(response.data)
-                        }
                     }
                 });
             }
@@ -55,9 +55,8 @@
                     url : url,
                     dataType : "json",
                     success : function (response) {
-                        if(response.success === "true") {
+                        if(response.success === "true")
                             create_dynamic_Games_HTML_table(response.data);
-                        }
                     },
                     error : function(message) {
                         failed(message);
@@ -113,28 +112,22 @@
 
                         // crée les cellules dans les lignes
                         for (let j = 0; j < NB_CELL; j++) {
-
                             let myCell = document.createElement("td");
                             myLine.appendChild(myCell);
 
                             if (j === 1) {
-
                                 // pas mettre de input
-                                if (obj["needPasswd"] === "false") {
+                                if (obj["needPasswd"] === "false")
                                     myCell.innerHTML = "pas besoin de mot de passe";
-                                }
-
                                 else {
                                     let input = document.createElement("input");
                                     input.type = "password";
-                                    input.className = "form-control";
+                                    input.className = "form-control game-passwd";
                                     input.placeholder = "mot de passe";
                                     input.required = true;
                                     myCell.appendChild(input);
                                 }
-                            }
-
-                            //Boutton
+                            } //Boutton
                             else if ( j === 2){
                                 // Mettre comme id dans le bouton le nom de la partie et dans l'input
                                 let button = document.createElement("button");
@@ -143,8 +136,7 @@
                                 myCell.appendChild(button);
 
                                 // ajouter un listener du bouton et vérifier l'input dans le cas où il est présent
-                            }
-                            else {
+                            } else {
                                 let nomPartie = obj["name"];
                                 myCell.innerHTML = nomPartie;
                             }
@@ -154,15 +146,12 @@
             }
             
             function create_dynamic_historic_HTML_table(type, data) {
-
                 let id_histo;
 
-                if(type === "Own") {
+                if(type === "Own")
                     id_histo = "own-historic";
-                }
-                else {
+                else
                     id_histo = "global-historic";
-                }
 
                 let div_historic = document.getElementById(id_histo);
 
@@ -202,11 +191,8 @@
                         myLine = document.createElement("tr");
                         myTable.appendChild(myLine);
                         myLine.id = count;
-                    }
-
-                    else {
+                    } else
                         continue;
-                    }
 
                     // ajout du # avant d'ajouter les noms
                     let myCell = document.createElement("th");
@@ -220,7 +206,7 @@
                         myLine.appendChild(myCell);
 
                     }
-                    count += 1;
+                    count++;
                 }
             }
         });
@@ -292,6 +278,8 @@
                                     </div>
                                     <div class="col-md-6 mb-3" id="passwd-input" style="display: none">
                                         <script>
+                                            var nomPartie = "";
+
                                             $(document).ready(function () {
                                                 $("#need-passwd").prop('checked', false);
 
@@ -322,6 +310,7 @@
                                                     var data = "name=" + $("#game-name").val() +
                                                         "&needPasswd=" + $('input[name=radio-stacked]:checked', '#create-game-form').val() +
                                                         "&passwd=" + $("#game-passwd").val() +
+                                                        "&pseudo=" + localStorage.getItem("user.pseudo") +
                                                         "&token=" + localStorage.getItem("token");
                                                     $.ajax({
                                                         url : '/api/game',
@@ -333,6 +322,8 @@
                                                             if (response.success === "true") {
                                                                 $('.alert').fadeOut();
                                                                 activeLoading();
+                                                                nomPartie = response.data.name;
+                                                                loadP4(response.data);
                                                             } else
                                                                 failed(response.message);
                                                         },
@@ -341,6 +332,28 @@
                                                         }
                                                     });
                                                 });
+                                                
+                                                function loadP4() {
+                                                    var data = "token=" + localStorage.getItem("token") +
+                                                        "&type=json";
+                                                    $.ajax({
+                                                        url : '/p4',
+                                                        type : 'GET',
+                                                        data : data,
+                                                        dataType : 'html',
+                                                        timeout: 5000,
+                                                        success : function(response, statut) {
+                                                            setTimeout(function() {
+                                                                $(".spa-body").remove();
+                                                                $('.modal-backdrop').remove();
+                                                                appendPage("/p4", response);
+                                                            },500);
+                                                        },
+                                                        error : function(message) {
+                                                            failed(message);
+                                                        }
+                                                    });
+                                                }
                                             });
                                         </script>
                                         <label for="game-passwd">Mot de passe de la partie</label>

@@ -9,12 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
 
-public class CurrentGameServlet extends HttpServlet {
+public class JoinGameServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
@@ -24,19 +22,18 @@ public class CurrentGameServlet extends HttpServlet {
                 return;
             }
             String name = req.getParameter("name");
-            String needPasswd = req.getParameter("needPasswd");
             String passwd = req.getParameter("passwd");
             String pseudo = req.getParameter("pseudo");
 
-            String return_json = "{\"success\":\"false\", \"message\":\"Partie avec ce nom déjà existante.\"}";
+            String return_json = "{\"success\":\"false\", \"message\":\"Partie non existante.\"}";
             boolean isOk = true;
-            if (name == null || needPasswd == null || ("true".equals(needPasswd) && (passwd == null || passwd.isEmpty())) || pseudo == null || "".equals(pseudo))  {
+            if (name == null || pseudo == null || "".equals(pseudo))  {
                 isOk = false;
                 return_json = "{\"success\":\"false\", \"message\":\"Paramètres invalides.\"}";
             }
 
             if (isOk) {
-                System.out.println("USERS POST CALL TO REGISTER A GAME :" + name + " " + needPasswd + " " + passwd);
+                System.out.println("USERS POST CALL TO JOIN A GAME :" + name + " " + pseudo + " " + passwd);
                 Genson genson = new Genson();
 
                 String json = new String(Files.readAllBytes(Paths.get("./data/temp/waitingGames.json")));
@@ -48,33 +45,33 @@ public class CurrentGameServlet extends HttpServlet {
                         targetGame[0] = (Map) value;
                 });
 
-                if (targetGame[0] == null) {
-                    Map<String, String> game_infos = new HashMap<String, String>();
-                    game_infos.put("name" , name);
-                    game_infos.put("needPasswd" , needPasswd);
-                    game_infos.put("passwd" , passwd);
+                boolean passwdOk = false;
+                if (targetGame[0] != null) {
+                    System.out.println(targetGame[0]);
+                    if ("false".equals(targetGame[0].get("needPasswd")) || targetGame[0].get("passwd").equals(passwd))
+                        passwdOk = true;
+                }
 
-                    games.put(name, game_infos);
+                if (passwdOk) {
+                    return_json = "{\"success\":\"true\"}";
+                    games.remove(name);
                     json = genson.serialize(games);
                     System.out.println(json);
                     Files.write(Paths.get("./data/temp/waitingGames.json"), json.getBytes());
 
                     json = new String(Files.readAllBytes(Paths.get("./data/temp/playingGames.json")));
                     games = genson.deserialize(json, Map.class);
-                    Map newGame = new HashMap();
-
-                    newGame.put("nomPartie", name);
-                    newGame.put("joueur1", pseudo);
-                    newGame.put("joueur2", "");
-                    newGame.put("dernierJoueur", "");
-                    newGame.put("colonne", "");
-                    games.put(name, newGame);
+                    games.forEach((key, value) -> {
+                        if (key.equals(name))
+                            targetGame[0] = (Map) value;
+                    });
+                    targetGame[0].put("joueur2", pseudo);
+                    System.out.println(targetGame[0]);
                     json = genson.serialize(games);
                     System.out.println(json);
                     Files.write(Paths.get("./data/temp/playingGames.json"), json.getBytes());
-
-                    return_json = genson.serialize(game_infos);
-                    return_json = "{\"success\":\"true\", \"data\":" + return_json + "}";
+                } else if (targetGame[0] != null) {
+                    return_json = "{\"success\":\"false\", \"message\":\"Mot de passe incorrect.\"}";
                 }
             }
 
@@ -84,7 +81,6 @@ public class CurrentGameServlet extends HttpServlet {
             resp.setCharacterEncoding("UTF-8");
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.getWriter().write(return_json);
-
         } catch (Exception e) {
             e.printStackTrace();
             String json = "{\"success\":\"false\", \"error\":";
@@ -94,43 +90,6 @@ public class CurrentGameServlet extends HttpServlet {
             resp.setCharacterEncoding("UTF-8");
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write(json);
-        }
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            System.out.println("Get current games");
-            String token = req.getParameter("token");
-            if (!Utils.verifyToken(token, req)) {
-                Utils.replyWithWrongTokenError(resp, token);
-                return;
-            }
-
-            Path path = Paths.get("./data/temp/waitingGames.json");
-            String json = "{\"success\":\"true\", \"data\":";
-
-            if (Files.exists(path)) {
-                json += new String(Files.readAllBytes(path));
-            }
-            else {
-                json += "\"\"";
-            }
-            json += "}";
-
-            resp.setContentType("application/json");
-            resp.setCharacterEncoding("UTF-8");
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().write(json);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            resp.setStatus(500);
-            resp.setContentType("text/html");
-            byte[] msgBytes = e.getMessage().getBytes("UTF-8");
-            resp.setContentLength(msgBytes.length);
-            resp.setCharacterEncoding("utf-8");
-            resp.getOutputStream().write(msgBytes);
         }
     }
 }
