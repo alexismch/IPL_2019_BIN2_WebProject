@@ -7,11 +7,6 @@
             $('#profile-fullname').html(localStorage.getItem("user.fullname"));
             $('#profile-email').html(localStorage.getItem("user.email"));
 
-            // ça fait quoi ça ?
-            $('#currentGames').on('hidden.bs.modal', function (e) {
-                $('.game-passwd')
-            });
-
             // Action sur le bouton
             $("#current-games").click(function (e) {
                 e.preventDefault();
@@ -145,7 +140,6 @@
                     $('.join-game').click(function () {
                         var name = this.getAttribute("data-row-id");
                         var passwd = $('#' + name + ' input').val();
-                        console.log(passwd);
 
                         var data = "pseudo=" + localStorage.getItem("user.pseudo") +
                             "&name=" + name +
@@ -253,6 +247,10 @@
         .section:last-child {
             margin-bottom: 0;
         }
+
+        .user-infos {
+            margin-bottom: 25px;
+        }
     </style>
     <div class="row">
         <div class="user-infos col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -266,9 +264,6 @@
                     <li class="list-group-item" id="profile-fullname">Michiels Alexis</li>
                     <li class="list-group-item" id="profile-email">private@alexismch.be</li>
                 </ul>
-                <div class="card-body">
-                    <a href="#" class="btn btn-primary" id="edit-profile">Modifier</a>
-                </div>
             </div>
         </div>
         <div class="game-info col-lg-9 col-md-8 col-sm-6 col-xs-12">
@@ -397,7 +392,7 @@
                                     <script>
                                         $(document).ready(function () {
                                            $("#no-game-button").click(function () {
-                                               $('#currentGames').modal('hide');
+                                               $( ".close" ).trigger( "click" );
                                            });
                                         });
                                     </script>

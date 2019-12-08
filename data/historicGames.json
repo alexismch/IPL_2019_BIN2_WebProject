@@ -1,14 +1,1 @@
-{
-  "1": {
-    "gagnant": "alexismch",
-    "perdant": "RvyBarman"
-  },
-  "2": {
-    "gagnant": "RvyBarman",
-    "perdant": "alexismch"
-  },
-  "3": {
-    "gagnant": "Collinet",
-    "perdant": "Barroni"
-  }
-}
+{"1":{"gagnant":"alexismch","perdant":"test"},"2":{"gagnant":"test","perdant":"alexismch"},"3":{"gagnant":"test","perdant":"alexismch"},"4":{"gagnant":"alexismch","perdant":"test"},"5":{"gagnant":"alexismch","perdant":"test"},"6":{"gagnant":"alexismch","perdant":"test"},"7":{"gagnant":"alexismch","perdant":"test"},"8":{"gagnant":"alexismch","perdant":"test"}}
