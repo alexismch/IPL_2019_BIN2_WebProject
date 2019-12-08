@@ -113,6 +113,11 @@ function loadP4() {
     });
 }
 
+function exitLoading() {
+    $("rect").css("transition", "1s ease").css("transform", "translateY(50px)");
+    $(".body-loader").delay(600).fadeOut();
+}
+
 $(document).ready(function () {
     token = initialRenderOfComponents();
     $(".alert button.close").click(function () {
