@@ -91,6 +91,28 @@ function loadLogin() {
     });
 }
 
+function loadP4() {
+    var data = "token=" + localStorage.getItem("token") +
+        "&type=json";
+    $.ajax({
+        url : '/p4',
+        type : 'GET',
+        data : data,
+        dataType : 'html',
+        timeout: 5000,
+        success : function(response, statut) {
+            setTimeout(function() {
+                $(".spa-body").remove();
+                $('.modal-backdrop').remove();
+                appendPage("/p4", response);
+            },500);
+        },
+        error : function(message) {
+            failed(message);
+        }
+    });
+}
+
 $(document).ready(function () {
     token = initialRenderOfComponents();
     $(".alert button.close").click(function () {

@@ -1,5 +1,4 @@
 var player = 0;
-const me = 1;
 var advers = "";
 var nbCouts = 0;
 
@@ -80,6 +79,6 @@ function wait(type) {
             wait("player");
             return;
         }
-        if (me !== player && localStorage.getItem("token") != null && localStorage.getItem("token") !== "null") wait();
+        if (type !== "player" && me !== player && localStorage.getItem("token") != null && localStorage.getItem("token") !== "null") wait();
     },5000);
 }

@@ -132,9 +132,9 @@
                                 // Mettre comme id dans le bouton le nom de la partie et dans l'input
                                 let button = document.createElement("button");
                                 button.innerText = "Rejoindre";
-                                button.className = "btn btn-primary";
+                                button.className = "btn btn-primary join-game";
+                                button.setAttribute("data-row-id", obj["name"]);
                                 myCell.appendChild(button);
-
                                 // ajouter un listener du bouton et vérifier l'input dans le cas où il est présent
                             } else {
                                 let nomPartie = obj["name"];
@@ -142,6 +142,33 @@
                             }
                         }
                     }
+                    $('.join-game').click(function () {
+                        var name = this.getAttribute("data-row-id");
+                        var passwd = $('#' + name + ' input').val();
+                        console.log(passwd);
+
+                        var data = "pseudo=" + localStorage.getItem("user.pseudo") +
+                            "&name=" + name +
+                            "&passwd=" + passwd +
+                            "&token=" + localStorage.getItem("token");
+
+                        $.ajax({
+                            url : '/api/joinGame',
+                            type : 'POST',
+                            data : data,
+                            dataType : 'json',
+                            timeout: 5000,
+                            success : function(response, statut) {
+                                if (response.success === "true" && statut === "success") {
+                                    $('.alert').fadeOut();
+                                    activeLoading();
+                                    nomPartie = name;
+                                    me = 1;
+                                    loadP4(response);
+                                }
+                            }
+                        });
+                    });
                 }
             }
             
@@ -279,7 +306,7 @@
                                     <div class="col-md-6 mb-3" id="passwd-input" style="display: none">
                                         <script>
                                             var nomPartie = "";
-
+                                            var me = 0;
                                             $(document).ready(function () {
                                                 $("#need-passwd").prop('checked', false);
 
@@ -323,6 +350,7 @@
                                                                 $('.alert').fadeOut();
                                                                 activeLoading();
                                                                 nomPartie = response.data.name;
+                                                                me = 0;
                                                                 loadP4(response.data);
                                                             } else
                                                                 failed(response.message);
@@ -332,28 +360,6 @@
                                                         }
                                                     });
                                                 });
-                                                
-                                                function loadP4() {
-                                                    var data = "token=" + localStorage.getItem("token") +
-                                                        "&type=json";
-                                                    $.ajax({
-                                                        url : '/p4',
-                                                        type : 'GET',
-                                                        data : data,
-                                                        dataType : 'html',
-                                                        timeout: 5000,
-                                                        success : function(response, statut) {
-                                                            setTimeout(function() {
-                                                                $(".spa-body").remove();
-                                                                $('.modal-backdrop').remove();
-                                                                appendPage("/p4", response);
-                                                            },500);
-                                                        },
-                                                        error : function(message) {
-                                                            failed(message);
-                                                        }
-                                                    });
-                                                }
                                             });
                                         </script>
                                         <label for="game-passwd">Mot de passe de la partie</label>
