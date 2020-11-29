@@ -48,6 +48,8 @@ public class LoginServlet extends HttpServlet {
                     claims.put("fullname", targetUser[0].get("fullname"));
                     claims.put("descript", targetUser[0].get("descript"));
                     claims.put("ip", req.getRemoteAddr());
+                    System.out.println(req.getRemoteAddr());
+                    System.out.println(claims.get("ip"));
                     String token = Utils.encodeToken(claims);
                     //Renvoie du succès avec le token et les infos de l'user
                     return_json =

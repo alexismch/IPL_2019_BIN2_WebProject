@@ -18,8 +18,8 @@ $(document).ready(function () {
 
 function ready() {
     enCours = true;
-    if (me == 1) wait();
-    $('#game table tr td').click(function (e) {
+    if (me === 1) wait();
+    $('#game table tr td').click(function () {
         if (player !== me || winner !== "") return;
         var col = this.getAttribute("data-column");
         if (set(col)) {
@@ -34,7 +34,7 @@ function set(colonne) {
     for (var i = 5; i >= 0; i--) {
         var row = $('#game table tr[data-row=' + i + '] td[data-column=' + colonne + ']');
         if (row.css("background-color") === "rgb(255, 255, 255)") {
-            row.css("background-color", (player == 1) ? "yellow" : "red");
+            row.css("background-color", (player === 1) ? "yellow" : "red");
             isOk = true;
             var win = verifWin();
 
@@ -174,10 +174,10 @@ function verifC() {
                 if (color !== row.css("background-color")) {
                     count = 1;
                     color = row.css("background-color");
-                } else {
+                } else
                     count++;
-                }
-            }
+            } else
+                count = 0;
             if (count >= 4)
                 return (color === "rgb(255, 0, 0)") ? 0 : 1;
         }
@@ -195,10 +195,10 @@ function verifR() {
                 if (color !== row.css("background-color")) {
                     count = 1;
                     color = row.css("background-color");
-                } else {
+                } else
                     count++;
-                }
-            }
+            } else
+                count = 0;
             if (count >= 4)
                 return (color === "rgb(255, 0, 0)") ? 0 : 1;
         }
@@ -222,7 +222,8 @@ function verifDD() {
                             color = row.css("background-color");
                         } else
                             count++;
-                    }
+                    } else
+                        count = 0;
                     if (count >= 4)
                         return (color === "rgb(255, 0, 0)") ? 0 : 1;
                     l++;
@@ -240,7 +241,8 @@ function verifDD() {
                         color = row.css("background-color");
                     } else
                         count++;
-                }
+                } else
+                    count = 0;
                 if (count >= 4)
                     return (color === "rgb(255, 0, 0)") ? 0 : 1;
                 k--;
@@ -266,7 +268,8 @@ function verifDG() {
                             color = row.css("background-color");
                         } else
                             count++;
-                    }
+                    } else
+                        count = 0;
                     if (count >= 4)
                         return (color === "rgb(255, 0, 0)") ? 0 : 1;
                     l++;
@@ -284,7 +287,8 @@ function verifDG() {
                         color = row.css("background-color");
                     } else
                         count++;
-                }
+                } else
+                    count = 0;
                 if (count >= 4)
                     return (color === "rgb(255, 0, 0)") ? 0 : 1;
                 k--;

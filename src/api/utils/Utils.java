@@ -27,6 +27,8 @@ public class Utils {
         if (token == null || "".equals(token) || "null".equals(token))
             return false;
         Map<String, Object> decodedToken = decodeToken(token);
+        System.out.println(req.getRemoteAddr());
+        System.out.println(decodedToken.get("ip"));
         if (!req.getRemoteAddr().equals(decodedToken.get("ip")))
             return false;
         if (decodedToken.get("pseudo") == null || "".equals(decodedToken.get("pseudo")))

@@ -1,1 +1,1 @@
-#game{display:flex;justify-content:center;margin:15px 0}#game table{border:3px #528aff outset;background-color:#528aff}#game td{width:2cm;height:2cm;margin:0;padding:0;border:2px #528aff inset;border-radius:2cm;background-color:white;cursor:pointer}
+#game{display:flex;justify-content:center;margin:15px 0}#game table{border:3px #528aff outset;background-color:#528aff}#game td{width:2cm;height:2cm;margin:0;padding:0;border:2px #528aff inset;border-radius:2cm;background-color:white;cursor:pointer}.modal-backdrop.show{z-index:9997}.modal.show{z-index:9998}
